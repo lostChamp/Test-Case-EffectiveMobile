@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@nestjs/common';
 import {UserRepository} from "./user.repository";
-import {CreateUserContract} from "@case/contracts";
+import {CreateUserContract, GetUsersContract} from "@case/contracts";
 
 @Injectable()
 export class UserService {
@@ -10,5 +10,10 @@ export class UserService {
   async createUser(userInfo: CreateUserContract.Request) {
     const newUser = await this.userRepository.createUser(userInfo);
     return newUser;
+  }
+
+  async getAllUsers() {
+    const users = await this.userRepository.getAllUsers();
+    return users;
   }
 }

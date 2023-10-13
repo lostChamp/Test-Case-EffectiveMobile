@@ -3,8 +3,8 @@ import {UserService} from './user.service';
 import {RabbitRPC} from "@golevelup/nestjs-rabbitmq";
 
 import {Payload} from "@nestjs/microservices";
-import {createUserRMQConfig} from "@case/rmq-configs";
-import {CreateUserContract} from "@case/contracts";
+import {createUserRMQConfig, getAllUsersRMQConfig} from "@case/rmq-configs";
+import {CreateUserContract, GetUsersContract} from "@case/contracts";
 
 
 @Controller()
@@ -16,5 +16,11 @@ export class UserController {
   async createUser(@Payload() userInfo: CreateUserContract.Request) {
     const newUser = this.userService.createUser(userInfo);
     return newUser;
+  }
+
+  @RabbitRPC(getAllUsersRMQConfig())
+  async getAllUsers() {
+    const users = this.userService.getAllUsers();
+    return users;
   }
 }

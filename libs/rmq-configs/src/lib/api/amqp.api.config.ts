@@ -5,15 +5,11 @@ export function amqpApiConfig(): RabbitMQConfig {
   return {
     exchanges: [
       {
-        name: 'PostApiExchange',
-        type: 'topic',
-      },
-      {
-        name: 'GetApiExchange',
-        type: 'topic',
-      },
-      {
         name: 'PostUsersExchange',
+        type: 'topic',
+      },
+      {
+        name: 'GetUsersExchange',
         type: 'topic',
       },
     ],

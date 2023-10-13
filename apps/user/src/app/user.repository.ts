@@ -2,7 +2,7 @@ import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {UserEntity} from "@case/typeorm";
 import {Repository} from "typeorm";
-import {CreateUserContract} from "@case/contracts";
+import {CreateUserContract, GetUsersContract} from "@case/contracts";
 
 
 
@@ -32,5 +32,10 @@ export class UserRepository {
       const newUser = {msg: "User already exits"};
       return newUser;
     }
+  }
+
+  async getAllUsers() {
+    const users = await this.UserEntity.find();
+    return users;
   }
 }
