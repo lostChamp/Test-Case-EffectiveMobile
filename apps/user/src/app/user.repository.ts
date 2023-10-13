@@ -2,7 +2,7 @@ import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {UserEntity} from "@case/typeorm";
 import {Repository} from "typeorm";
-import {CreateUserContract, GetUsersContract} from "@case/contracts";
+import {CreateUserContract, EditUserContract, GetUsersContract} from "@case/contracts";
 
 
 
@@ -37,5 +37,24 @@ export class UserRepository {
   async getAllUsers() {
     const users = await this.UserEntity.find();
     return users;
+  }
+
+  async editUser(infoUser: EditUserContract.Request) {
+    const tempUser = await this.UserEntity.findOne({
+      where: {
+        id: infoUser["id"]
+      }
+    })
+    if(tempUser) {
+      tempUser.name = infoUser["info"]["name"];
+      tempUser.email = infoUser["info"]["email"];
+      const user = await this.UserEntity.save(
+        tempUser
+      );
+      return user;
+    }else {
+      const msg = {msg: "User not found"};
+      return msg;
+    }
   }
 }

@@ -12,8 +12,9 @@ import {
 } from '@nestjs/common';
 import {AmqpConnection} from "@golevelup/nestjs-rabbitmq";
 import {CreateUserDto} from "./dtos/create.user.dto";
-import {createUserRMQConfig, getAllUsersRMQConfig} from "@case/rmq-configs";
+import {createUserRMQConfig, editUserRMQConfig, getAllUsersRMQConfig} from "@case/rmq-configs";
 import {CreateUserContract, GetUsersContract} from "@case/contracts";
+import {EditUserDto} from "./dtos/edit.user.dto";
 
 
 
@@ -55,10 +56,17 @@ export class AppController {
 
   @Put("/edit/:id")
   @HttpCode(HttpStatus.OK)
-  async editUser() {
+  async editUser(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() info: EditUserDto
+  ) {
     try {
       const user = await this.amqpConnection.request<GetUsersContract.Response>({
-        ...getAllUsersRMQConfig(),
+        ...editUserRMQConfig(),
+        payload: {
+          info: info,
+          id: id,
+        }
       });
       return user;
     }catch (e) {
