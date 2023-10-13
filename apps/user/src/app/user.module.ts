@@ -1,20 +1,21 @@
 import { Module } from '@nestjs/common';
 import { UserController } from './user.controller';
-import { AppService } from './user.service';
+import {UserService} from './user.service';
 import {ConfigModule} from "@nestjs/config";
-import {LogEntity, TypeormModuleConfig} from "@case/typeorm";
+import {TypeormModuleConfig, UserEntity} from "@case/typeorm";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {rmqLogConfig} from "@case/rmq-configs";
 import {RabbitMQModule} from "@golevelup/nestjs-rabbitmq";
+import {UserRepository} from "./user.repository";
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeormModuleConfig,
-    TypeOrmModule.forFeature([LogEntity]),
+    TypeOrmModule.forFeature([UserEntity]),
     RabbitMQModule.forRoot(RabbitMQModule, rmqLogConfig()),
   ],
   controllers: [UserController],
-  providers: [AppService],
+  providers: [UserService, UserRepository],
 })
 export class UserModule {}

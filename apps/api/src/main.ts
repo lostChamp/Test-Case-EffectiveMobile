@@ -7,8 +7,7 @@ import {DocumentBuilder, SwaggerDocumentOptions, SwaggerModule} from "@nestjs/sw
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
+  const docPrefix = 'api';
   const config = new DocumentBuilder()
     .setTitle('Test Case For Green-Api')
     .setDescription('Test Case For Green-Api')
@@ -23,7 +22,10 @@ async function bootstrap() {
   const port = process.env.PORT || 8080;
   await app.listen(port);
   Logger.log(
-    `🚀 Application API is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Application API is running on: http://localhost:${port}`
+  );
+  Logger.log(
+    `🚀 Documentation is running on: http://localhost:${port}/${docPrefix}`
   );
 }
 

@@ -11,7 +11,11 @@ export function amqpApiConfig(): RabbitMQConfig {
       {
         name: 'GetApiExchange',
         type: 'topic',
-      }
+      },
+      {
+        name: 'PostUsersExchange',
+        type: 'topic',
+      },
     ],
     uri: "amqp://nestjs:nestjs@localhost:5672",
     connectionInitOptions: {wait: false},
