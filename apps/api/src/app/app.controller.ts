@@ -8,13 +8,14 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Put
+  Put, ValidationPipe
 } from '@nestjs/common';
 import {AmqpConnection} from "@golevelup/nestjs-rabbitmq";
 import {CreateUserDto} from "./dtos/create.user.dto";
 import {createUserRMQConfig, editUserRMQConfig, getAllUsersRMQConfig} from "@case/rmq-configs";
-import {CreateUserContract, GetUsersContract} from "@case/contracts";
+import {CreateUserContract, EditUserContract, GetUsersContract} from "@case/contracts";
 import {EditUserDto} from "./dtos/edit.user.dto";
+import {validate, validateOrReject} from "@nestjs/class-validator";
 
 
 
@@ -26,7 +27,7 @@ export class AppController {
 
   @Post("/create")
   @HttpCode(HttpStatus.CREATED)
-  async createUser(@Body() info: CreateUserDto) {
+  async createUser(@Body(ValidationPipe) info: CreateUserDto) {
     try {
       const user = await this.amqpConnection.request<CreateUserContract.Response>({
         ...createUserRMQConfig(),
@@ -36,8 +37,8 @@ export class AppController {
         return new HttpException(user["msg"], HttpStatus.BAD_REQUEST);
       }
       return user;
-    }catch (e) {
-      throw new Error(e)
+    }catch (errors) {
+      return new Error(errors);
     }
   }
 
@@ -58,16 +59,19 @@ export class AppController {
   @HttpCode(HttpStatus.OK)
   async editUser(
     @Param("id", ParseIntPipe) id: number,
-    @Body() info: EditUserDto
+    @Body(ValidationPipe) info: EditUserDto
   ) {
     try {
-      const user = await this.amqpConnection.request<GetUsersContract.Response>({
+      const user = await this.amqpConnection.request<EditUserContract.Response>({
         ...editUserRMQConfig(),
         payload: {
           info: info,
           id: id,
         }
       });
+      if(user["msg"]) {
+        return new HttpException(user["msg"], HttpStatus.BAD_REQUEST);
+      }
       return user;
     }catch (e) {
       throw new Error(e)

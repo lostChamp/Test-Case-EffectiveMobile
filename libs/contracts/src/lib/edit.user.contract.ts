@@ -5,6 +5,7 @@ export namespace EditUserContract {
   }
 
   export class Response{
+    id?: number;
     name?: string;
     email?: string;
     msg?: object;

@@ -9,7 +9,7 @@ export class UserEntity extends BaseEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ unique: true, type: "varchar"})
   email: string;
 
   @CreateDateColumn()
