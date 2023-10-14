@@ -1,4 +1,5 @@
 
-export * from "./lib/create.user.contract";
-export * from "./lib/get.users.contract";
-export * from "./lib/edit.user.contract";
+export * from "./lib/user/create.user.contract";
+export * from "./lib/user/get.users.contract";
+export * from "./lib/user/edit.user.contract";
+export * from "./lib/log/create.log.contract"

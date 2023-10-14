@@ -6,12 +6,13 @@ export class LogEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column({type: "varchar"})
+  operation: string;
+
   @CreateDateColumn()
   created_at: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
-  @JoinColumn({ name: 'id' })
-  user: number
-
-
+  @JoinColumn({ name: 'user_id' })
+  user: UserEntity
 }

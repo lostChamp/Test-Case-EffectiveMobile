@@ -4,9 +4,13 @@ export function rmqLogConfig(): RabbitMQConfig {
   return {
     exchanges: [
       {
-        name: 'GetUsersExchange',
+        name: 'GetLogExchange',
         type: 'topic',
       },
+      {
+        name: 'PostLogExchange',
+        type: 'topic',
+      }
     ],
     uri: "amqp://nestjs:nestjs@localhost:5672",
     connectionInitOptions: { wait: false },

@@ -17,5 +17,5 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => LogEntity, (log) => log.user)
   @JoinTable()
-  log: UserEntity[];
+  log: LogEntity[];
 }
