@@ -1,4 +1,8 @@
 export namespace GetLogContract {
+
+  export class Request {
+    info: object;
+  }
   export class Response {
     id: number;
     operation: string;

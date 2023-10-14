@@ -4,7 +4,7 @@ import { LogService } from './log.service';
 import {RabbitRPC} from "@golevelup/nestjs-rabbitmq";
 import {createLogRMQConfig, getAllLogRMQConfig, getLogsByUserIdRMQConfig} from "@case/rmq-configs";
 import {Payload} from "@nestjs/microservices";
-import {CreateLogContract} from "@case/contracts";
+import {CreateLogContract, GetLogContract} from "@case/contracts";
 
 @Controller()
 export class LogController {
@@ -22,8 +22,10 @@ export class LogController {
   }
 
   @RabbitRPC(getLogsByUserIdRMQConfig())
-  async getLogsByUserId(@Payload() userId: number) {
-    const logs = await this.logService.getLogsByUserId(userId);
+  async getLogsByUserId(
+    @Payload() info: GetLogContract.Request,
+                        ) {
+    const logs = await this.logService.getLogsByUserId(info);
     return logs;
   }
 }

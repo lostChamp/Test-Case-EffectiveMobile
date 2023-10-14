@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@nestjs/common';
 import {LogRepository} from "./log.repository";
-import {CreateLogContract} from "@case/contracts";
+import {CreateLogContract, GetLogContract, GetUsersContract} from "@case/contracts";
 
 @Injectable()
 export class LogService {
@@ -16,8 +16,8 @@ export class LogService {
     return logs;
   }
 
-  async getLogsByUserId(userId: number) {
-    const logs = await this.logRepository.getLogsByUserId(userId);
+  async getLogsByUserId(info: GetLogContract.Request) {
+    const logs = await this.logRepository.getLogsByUserId(info);
     return logs;
   }
 }

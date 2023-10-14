@@ -2,7 +2,7 @@ import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {LogEntity} from "@case/typeorm";
-import {CreateLogContract} from "@case/contracts";
+import {CreateLogContract, GetLogContract} from "@case/contracts";
 
 
 
@@ -34,18 +34,25 @@ export class LogRepository {
     return logs;
   }
 
-  async getLogsByUserId(userId: number) {
-    const logs = await this.LogEntity.find({
+  async getLogsByUserId(info: GetLogContract.Request) {
+    const [logs, total] = await this.LogEntity.findAndCount({
       where: {
         user: {
-          id: userId
+          id: info["userId"]
         }
       },
       relations: {
         user: true
-      }
+      },
+      skip: (info["page"] - 1) * info["limit"],
+      take: info["limit"],
     });
-    return logs;
+    return {
+      data: logs,
+      total,
+      page: info["page"],
+      pageCount: Math.ceil(total / info["limit"])
+    };
   }
 
 }
