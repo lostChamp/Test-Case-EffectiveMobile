@@ -15,4 +15,9 @@ export class LogService {
     const logs = await this.logRepository.getAllLogs();
     return logs;
   }
+
+  async getLogsByUserId(userId: number) {
+    const logs = await this.logRepository.getLogsByUserId(userId);
+    return logs;
+  }
 }

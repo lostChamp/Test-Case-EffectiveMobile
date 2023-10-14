@@ -1,6 +1,6 @@
-import {Controller, Get, HttpCode, HttpStatus} from "@nestjs/common";
-import {GetUsersContract} from "@case/contracts";
-import {getAllLogRMQConfig} from "@case/rmq-configs";
+import {Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe} from "@nestjs/common";
+import {GetLogContract, GetUsersContract} from "@case/contracts";
+import {getAllLogRMQConfig, getLogsByUserIdRMQConfig} from "@case/rmq-configs";
 import {AmqpConnection} from "@golevelup/nestjs-rabbitmq";
 
 @Controller("/logs")
@@ -20,5 +20,15 @@ export class LogApiGateway {
     }
   }
 
-
+  @Get("/:id")
+  @HttpCode(HttpStatus.OK)
+  async getLogByUserId(
+    @Param("id", ParseIntPipe) userId: number
+  ) {
+    const logs = await this.amqpConnection.request<GetLogContract.Response>({
+      ...getLogsByUserIdRMQConfig(),
+      payload: userId
+    });
+    return logs;
+  }
 }

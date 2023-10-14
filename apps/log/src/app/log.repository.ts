@@ -34,4 +34,18 @@ export class LogRepository {
     return logs;
   }
 
+  async getLogsByUserId(userId: number) {
+    const logs = await this.LogEntity.find({
+      where: {
+        user: {
+          id: userId
+        }
+      },
+      relations: {
+        user: true
+      }
+    });
+    return logs;
+  }
+
 }

@@ -16,6 +16,14 @@ export function amqpApiConfig(): RabbitMQConfig {
         name: 'PutUsersExchange',
         type: 'topic',
       },
+      {
+        name: 'GetLogExchange',
+        type: 'topic'
+      },
+      {
+        name: 'PostLogExchange',
+        type: 'topic'
+      }
     ],
     uri: "amqp://nestjs:nestjs@localhost:5672",
     connectionInitOptions: {wait: false},

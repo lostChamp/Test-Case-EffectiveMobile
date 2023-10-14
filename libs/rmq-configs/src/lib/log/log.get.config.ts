@@ -7,3 +7,11 @@ export function getAllLogRMQConfig(): RmqConfig {
     queue: 'GetLogQueue',
   };
 }
+
+export function getLogsByUserIdRMQConfig(): RmqConfig {
+  return {
+    exchange: 'GetLogExchange',
+    routingKey: 'get-logs-by-user-id',
+    queue: 'GetLogsByUserId'
+  }
+}
