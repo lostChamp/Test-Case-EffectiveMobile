@@ -5,13 +5,14 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
-  Param,
-  ParseIntPipe,
+  Param, ParseIntPipe,
   Post,
-  Put, ValidationPipe
-} from '@nestjs/common';
+  Put,
+  ValidationPipe
+} from "@nestjs/common";
 import {AmqpConnection} from "@golevelup/nestjs-rabbitmq";
-import {CreateUserDto} from "./dtos/create.user.dto";
+import {CreateUserDto} from "../../dtos/create.user.dto";
+import {CreateUserContract, EditUserContract, GetUsersContract} from "@case/contracts";
 import {
   createLogRMQConfig,
   createUserRMQConfig,
@@ -19,17 +20,12 @@ import {
   getAllLogRMQConfig,
   getAllUsersRMQConfig
 } from "@case/rmq-configs";
-import {CreateUserContract, EditUserContract, GetUsersContract} from "@case/contracts";
-import {EditUserDto} from "./dtos/edit.user.dto";
-import {CreateLogDto} from "./dtos/create.log.dto";
-
-
-
+import {CreateLogDto} from "../../dtos/create.log.dto";
+import {EditUserDto} from "../../dtos/edit.user.dto";
 
 @Controller("/user")
-export class AppController {
+export class UserApiGateway {
   constructor(private readonly amqpConnection: AmqpConnection) {}
-
 
   @Post("/create")
   @HttpCode(HttpStatus.CREATED)
@@ -70,19 +66,6 @@ export class AppController {
     }
   }
 
-  @Get("/allLogs")
-  @HttpCode(HttpStatus.OK)
-  async getAllLog() {
-    try {
-      const logs = await this.amqpConnection.request({
-        ...getAllLogRMQConfig()
-      })
-      return logs;
-    }catch (e) {
-      throw new Error(e);
-    }
-  }
-
   @Put("/edit/:id")
   @HttpCode(HttpStatus.OK)
   async editUser(
@@ -100,6 +83,15 @@ export class AppController {
       if(user["msg"]) {
         return new HttpException(user["msg"], HttpStatus.BAD_REQUEST);
       }
+      const logInfo: CreateLogDto = {
+        user_id: user["id"],
+        operation: "EDIT",
+      }
+      await this.amqpConnection.publish(
+        createLogRMQConfig().exchange,
+        createLogRMQConfig().routingKey,
+        logInfo
+      );
       return user;
     }catch (e) {
       throw new Error(e)
