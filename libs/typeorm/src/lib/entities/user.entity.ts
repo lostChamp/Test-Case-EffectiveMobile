@@ -6,10 +6,10 @@ export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({type: "varchar", nullable: false})
   name: string;
 
-  @Column({ unique: true, type: "varchar"})
+  @Column({ unique: true, type: "varchar", nullable: true})
   email: string;
 
   @CreateDateColumn()

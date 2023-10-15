@@ -9,10 +9,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const docPrefix = 'api';
   const config = new DocumentBuilder()
-    .setTitle('Test Case For Green-Api')
-    .setDescription('Test Case For Green-Api')
+    .setTitle('Test Case For Effective Mobile')
+    .setDescription('Test Case For Effective Mobile')
     .setVersion('1.0')
-    .addTag('Green Api')
+    .addTag('Effective Mobile')
     .build();
   const options: SwaggerDocumentOptions = {
     deepScanRoutes: true,

@@ -17,18 +17,26 @@ import {
   createLogRMQConfig,
   createUserRMQConfig,
   editUserRMQConfig,
-  getAllLogRMQConfig,
   getAllUsersRMQConfig
 } from "@case/rmq-configs";
 import {CreateLogDto} from "../../dtos/create.log.dto";
 import {EditUserDto} from "../../dtos/edit.user.dto";
+import {ApiBody, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
 
+@ApiTags('User')
 @Controller("/user")
 export class UserApiGateway {
   constructor(private readonly amqpConnection: AmqpConnection) {}
 
   @Post("/create")
   @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Create new user' })
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'CREATED',
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: "Bad request" })
   async createUser(@Body(ValidationPipe) info: CreateUserDto) {
     try {
       const user = await this.amqpConnection.request<CreateUserContract.Response>({
@@ -55,6 +63,12 @@ export class UserApiGateway {
 
   @Get("/all")
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'SUCCESS',
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: "Bad request" })
   async getAllUsers() {
     try {
       const users = await this.amqpConnection.request<GetUsersContract.Response>({
@@ -65,9 +79,15 @@ export class UserApiGateway {
       throw new Error(e)
     }
   }
-
   @Put("/edit/:id")
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Edit user by id in param' })
+  @ApiBody({ type: EditUserDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'SUCCESS',
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: "Bad request" })
   async editUser(
     @Param("id", ParseIntPipe) id: number,
     @Body(ValidationPipe) info: EditUserDto
